@@ -1,4 +1,6 @@
 import { useRef, useState } from "react"
+import { useAddParticipants } from "../state/hook/useAddParticipants"
+import { useErrorMsg } from "../state/hook/useErrorMsg"
 
 
 export function Form() {
@@ -11,7 +13,12 @@ export function Form() {
     event.preventDefault()
     setName('')
     inputRef.current?.focus()
+    addToList(name)
   }
+
+  const addToList = useAddParticipants()
+  
+  const errorMsg = useErrorMsg()
 
   return (
     <form onSubmit={AddName}>
@@ -22,6 +29,7 @@ export function Form() {
         type="text"
         placeholder="Enter participant names"/>
       <button disabled={!name}>Adicionar</button>
+      {errorMsg && <span role="alert">{errorMsg}</span>}
     </form>
   )
 }
