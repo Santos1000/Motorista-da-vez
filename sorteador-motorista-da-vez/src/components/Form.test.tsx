@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { Form } from "./Form";
 import { RecoilRoot } from "recoil";
 
@@ -66,3 +66,35 @@ test('Add a participant when a name is called', () => {
 //   const errorMsg = screen.getByRole("alert", { level: 2 });
 //   expect(errorMsg.textContent).toBe("It's not allowed duplicate names")
 // })
+
+test('the error message should go away after the timers', () => {
+  jest.useFakeTimers()
+  render(
+    <RecoilRoot>
+      <Form />
+    </RecoilRoot>)
+
+  const input = screen.getByPlaceholderText('Enter participant names')
+    const button = screen.getByRole('button')
+    fireEvent.change(input, {
+      target: {
+        value: 'Ana Catarina'
+      }
+    })
+    fireEvent.click(button)
+    fireEvent.change(input, {
+      target: {
+        value: 'Ana Catarina'
+      }
+    })
+    fireEvent.click(button)
+    let mensagemDeErro = screen.queryByRole('alert')
+    expect(mensagemDeErro).toBeInTheDocument()
+
+    act(() => {
+      jest.runAllTimers()
+    });
+
+    mensagemDeErro = screen.queryByRole('alert')
+    expect(mensagemDeErro).toBeNull()
+})

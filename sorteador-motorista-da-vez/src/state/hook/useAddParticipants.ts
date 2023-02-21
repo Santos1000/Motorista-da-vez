@@ -9,6 +9,9 @@ export const useAddParticipants = () => {
   return (userName: string) => {
     if (list.includes(userName)) {
       setError("It's not allowed duplicate names")
+      setTimeout(() => {
+        setError('')
+      }, 5000);
       return
     }
     return setList(currentList => [...currentList, userName])
