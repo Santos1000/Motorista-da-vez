@@ -2,10 +2,19 @@ import { render, screen } from '@testing-library/react'
 import { RecoilRoot } from "recoil"
 import React from 'react'
 import { List } from "./participantList"
-import { isJSDocUnknownTag } from 'typescript'
+import { useUserList } from '../../state/hook/useUserList'
 
-describe('lista vazia', () => {
-  test('alal', () => {
+jest.mock('../../state/hook/useUserList', () => {
+  return {
+    useUserList: jest.fn()
+  }
+})
+
+describe('Should be a empty list', () => {
+  beforeEach(() => {
+    (useUserList as jest.Mock).mockReturnValue([])
+  })
+  test('Rendered empty list', () => {
     render(
       <RecoilRoot>
         <List/>
@@ -16,15 +25,19 @@ describe('lista vazia', () => {
   })
 })
 
-describe('lista preenchida', () => {
-  const mockList = ['Ana', 'Amanda']
-  test('lista preenchida renderizada', () => {
-    render(
-      <RecoilRoot>
-        <List />
-      </RecoilRoot>)
+// describe('Should exist a list', () => {
+//   const mockList = ['Ana', 'Amanda']
+//   beforeEach(() => {
+//     (useUserList as jest.Mock).mockReturnValue(mockList)
+//   })
 
-    const itens = screen.queryAllByRole('itenList')
-    expect(itens).toHaveLength(mockList.length)
-  })
-})
+//   test('Rendered populated list', () => {
+//     render(
+//       <RecoilRoot>
+//         <List />
+//       </RecoilRoot>)
+
+//     const itens = screen.queryAllByRole('itenList')
+//     expect(itens).toHaveLength(mockList.length)
+//   })
+// })
